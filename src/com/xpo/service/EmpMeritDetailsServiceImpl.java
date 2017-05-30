@@ -24,4 +24,12 @@ public class EmpMeritDetailsServiceImpl implements EmpMeritDetailsService {
 		return empDao.getEmpMeritDetails(empId);
 	}
 
+	@Override
+	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {
+		
+		empDao.saveEmpMeritDetails(list);
+		
+	}
+	
+
 }

@@ -7,7 +7,9 @@ import java.util.List;
 import javax.persistence.ParameterMode;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.procedure.ProcedureCall;
 import org.hibernate.procedure.ProcedureOutputs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,26 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 		List<EmployeeMeritDetails> empMeritDetails = query.list();
 		
 		return empMeritDetails;
+	
 		
 		
 		
+		
+	}
+	
+	
+	@Override
+	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {
+		
+		for(EmployeeMeritDetails empMeritDetails: list) {
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.saveOrUpdate(empMeritDetails);
+			session.getTransaction().commit();
+			session.close();
+			
+			
+		}	
 		
 	}
 	
@@ -51,6 +70,9 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 		return reportees;
 		
 	}
+
+
+	
 	
 	
 

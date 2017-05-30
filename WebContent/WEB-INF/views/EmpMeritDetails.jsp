@@ -85,7 +85,7 @@ font-weight:normal;
 	} */
 	
 	</script>
-	<form method="post" action="./ControllerServlet" modelAttribute="empMeritDetails">
+	<form method="post" action="/XPO_HR_Merit_System/merit/saveEmpMeritDetails.html" modelAttribute="empMeritDetailsListBean">
 	<span style="background-color:#CC0000;float:right;padding-left:68%" >
     
     
@@ -101,11 +101,11 @@ font-weight:normal;
 </span> 
 
            <c:set var="counter" value="0" />
-            <c:forEach items="${empMeritDetails}" var="empMeritDetail">
+            <c:forEach items="${empMeritDetailsListBean.empMeritDetail}" var="empMeritDetail">
                 <c:set var="counter" value="${counter+empMeritDetail.targetSalary}" /> 
             </c:forEach>
             <c:set var="rcmdsalary" value="0" />
-            <c:forEach items="${empMeritDetails}" var="empMeritDetail">
+            <c:forEach items="${empMeritDetailsListBean.empMeritDetail}" var="empMeritDetail">
                 <c:set var="rcmdsalary" value="${rcmdsalary+empMeritDetail.recommendedSalAmt}" />      
             </c:forEach> 
 			</br></br></br></br></br>
@@ -152,38 +152,70 @@ font-weight:normal;
         </thead>
         <tbody>
 <%-- <c:set var="cnt" value="0" /> --%>
-               <c:forEach items="${empMeritDetails}" var="empMeritDetail" varStatus="status">
+               <c:forEach items="${empMeritDetailsListBean.empMeritDetail}" var="empMeritDetail" varStatus="status">
                  
         <tr class="textbox">
             <td align="center">${status.count}</td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.empId}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.firstName}" /></td>
-            <td style="background-color:#E3EDF1"  ><c:out value="${empMeritDetail.lastName}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.directManager}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.l1Manager}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.l2Manager}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.l3Manager}" /></td>
-            <td style="background-color:#E3EDF1" > <c:out value="${empMeritDetail.jobTitle}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.hireDate}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.performanceSurvey}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.currentSalary}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.targetSalary}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.targetPercentage}" /></td>
             <td style="background-color:#E3EDF1" >
-            <input type="text" disabled class="textbox"  id="receomendedsalarypercentage_${cnt}" name ="empMeritDetail[${status.index}].recommendedSalPerc"
+            <input name="empMeritDetail[${status.index}].empId" value="${empMeritDetail.empId}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].firstName" value="${empMeritDetail.firstName}"/>
+            </td>
+            <td style="background-color:#E3EDF1"  >
+            <input name="empMeritDetail[${status.index}].lastName" value="${empMeritDetail.lastName}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].directManager" value="${empMeritDetail.directManager}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].l1Manager" value="${empMeritDetail.l1Manager}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].l2Manager" value="${empMeritDetail.l2Manager}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].l3Manager" value="${empMeritDetail.l3Manager}"/>
+            </td>
+            <td style="background-color:#E3EDF1" > 
+            <input name="empMeritDetail[${status.index}].jobTitle" value="${empMeritDetail.jobTitle}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].hireDate" value="${empMeritDetail.hireDate}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].performanceSurvey" value="${empMeritDetail.performanceSurvey}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].currentSalary" value="${empMeritDetail.currentSalary}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].targetSalary" value="${empMeritDetail.targetSalary}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].targetPercentage" value="${empMeritDetail.targetPercentage}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].recommendedSalPerc"
                                value="<c:out value="${empMeritDetail.recommendedSalPerc}" />" />
             </td>                               
             <td style="background-color:#FFFFFF" >
-            <input type="text" class="textbox"  name="empMeritDetails[${status.index}].recommendedSalAmt" id="recomendedsalaryamt${cnt}"
+            <input type="text" class="textbox"  name="empMeritDetail[${status.index}].recommendedSalAmt"
                                value="<c:out value="${empMeritDetail.recommendedSalAmt}" />" onchange="update(${cnt})"/>
              </td>
             <td style="background-color:#E3EDF1" >
-            <input type="text" disabled class="textbox"  id="salaryaftermerit_${cnt}" name ="empMeritDetails[${status.index}].salAfterMerit"
+            <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].salAfterMerit"
                                value="<c:out value="${empMeritDetail.salAfterMerit}" />" />
             </td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.lastSalaryHikeDate}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.meritCycle}" /></td>
-            <td style="background-color:#E3EDF1" ><c:out value="${empMeritDetail.meritSystem}" /></td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].lastSalaryHikeDate" value="${empMeritDetail.lastSalaryHikeDate}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].meritCycle" value="${empMeritDetail.meritCycle}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].meritSystem" value="${empMeritDetail.meritSystem}"/>
+            </td>
         </tr>
         
 		

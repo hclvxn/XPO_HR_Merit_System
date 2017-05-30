@@ -71,7 +71,7 @@ public class LoginController {
 		if (userModel.getPassword().equals(user.getPassword())) {
 			
 					
-			model1 = new ModelAndView("forward:/merit/getEmpMeritDetails.html");
+			model1 = new ModelAndView("redirect:/merit/getEmpMeritDetails.html");
 			model1.addObject("userInfo", user);
 		}
 		else {
