@@ -1,7 +1,7 @@
 package com.xpo.controller;
 
 import javax.validation.Valid;
-
+import org.springframework.security.crypto.bcrypt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -68,10 +68,11 @@ public class LoginController {
 		}*/
 		
 		User userModel = loginService.getEmployee(user.getUserName());
-		if (userModel.getPassword().equals(user.getPassword())) {
+		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+		if (userModel.getPassword().equals(encodedPassword)) {
 			
 					
-			model1 = new ModelAndView("redirect:/merit/getEmpMeritDetails.html");
+			model1 = new ModelAndView("forward:/merit/getEmpMeritDetails.html");
 			model1.addObject("userInfo", user);
 		}
 		else {
