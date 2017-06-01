@@ -1,5 +1,7 @@
 package com.xpo.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xpo.dao.EmpMeritDetailsDao;
 import com.xpo.model.EmployeeMeritDetails;
+import com.xpo.model.StageWindow;
 
 
 @Service("empMeritDetailsService")
@@ -30,6 +33,57 @@ public class EmpMeritDetailsServiceImpl implements EmpMeritDetailsService {
 		empDao.saveEmpMeritDetails(list);
 		
 	}
+
+	@Override
+	public List<String> getDirectReportees(String empId) {
+		
+		return empDao.getDirectReportees(empId);
+
+
+	}
+
+	@Override
+	public boolean isStageCompleted(String stage, String empId) {
+		
+		LocalDate currentDate = LocalDate.now();
+		StageWindow stageWindow = empDao.getStageWindow(stage);
+		LocalDate startDate = stageWindow.getStartDate().toLocalDate();
+		LocalDate endDate = stageWindow.getEndDate().toLocalDate();
+		
+		if(!(currentDate.isBefore(startDate) || currentDate.isAfter(endDate))) {
+			
+			if(stage.equals("Appraiser")) {
+				
+				if(empDao.checkJobStatus(stage, empId)){
+					return true;
+				}
+				else {
+					return false;
+				}
+				
+				
+			}
+			else if(stage.equals("Reviewer")) {
+				if(empDao.checkJobStatus(stage, empId)){
+					return true;
+				}
+				else {
+					return false;
+				}
+				
+			}
+			
+		}
+		
+		
+		return false;
+		
+		
+		
+		
+	}
+	
+	
 	
 
 }

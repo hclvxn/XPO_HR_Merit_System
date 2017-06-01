@@ -73,10 +73,14 @@ public class EmpMeritDetailsController {
 		
 		if(empMeritDetails != null) {
 			
+			List<String> directReportees = empService.getDirectReportees(user.getUserName());
+			
 			model1 = new ModelAndView("EmpMeritDetails");
 			empMeritDetailsListBean = new EmpMeritDetailsListBean();
-			empMeritDetailsListBean.setEmpMeritDetail(prepareListOfBean(empMeritDetails));
+			empMeritDetailsListBean.setEmpMeritDetail(prepareListOfBean(empMeritDetails, directReportees));
 			model1.addObject("empMeritDetailsListBean", empMeritDetailsListBean);
+			model1.addObject("ReviewerStage", checkStageStatus(user.getUserName(), "Reviewer"));
+			model1.addObject("AppraiserStage", checkStageStatus(user.getUserName(), "Appraiser"));
 			return model1;
 		}
 		else {
@@ -134,6 +138,7 @@ public class EmpMeritDetailsController {
 				model.setTargetPercentage(empMeritDetails.getTargetPercentage());
 				model.setTargetSalary(empMeritDetails.getTargetSalary());
 				model.setType(empMeritDetails.getType());
+				model.setOrganization(empMeritDetails.getOrganization());
 				modelList.add(model);
 			}
 		}
@@ -144,7 +149,7 @@ public class EmpMeritDetailsController {
 			
 		
 	
-	private List<EmpMeritDetailsBean> prepareListOfBean(List<EmployeeMeritDetails> empDetails){
+	private List<EmpMeritDetailsBean> prepareListOfBean(List<EmployeeMeritDetails> empDetails, List<String> dirReportees){
 		
 		List<EmpMeritDetailsBean> beans = null;
 		
@@ -174,11 +179,24 @@ public class EmpMeritDetailsController {
 				bean.setTargetPercentage(empMeritDetail.getTargetPercentage());
 				bean.setTargetSalary(empMeritDetail.getTargetSalary());
 				bean.setType(empMeritDetail.getType());
+				bean.setOrganization(empMeritDetail.getOrganization());
+				if(dirReportees.contains(empMeritDetail.getEmpId())) {
+					bean.setDirectOrIndirect("Direct");
+				}
+				else {
+					bean.setDirectOrIndirect("Indirect");
+				}
 				beans.add(bean);
 		   }
 		  }
 		  return beans;
 		 }
+	
+	
+	private boolean checkStageStatus(String empId, String stage) {
+		return empService.isStageCompleted(stage, empId);
+		
+	}
 	
 	
 }

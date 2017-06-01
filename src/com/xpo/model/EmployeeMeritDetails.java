@@ -83,6 +83,9 @@ public class EmployeeMeritDetails implements Serializable {
 	 @Column(name="MeritSystem")
 	 private String meritSystem;
 	 
+	 @Column(name="Organization")
+	 private String organization;
+	 
 	
 	public String getEmpId() {
 		return empId;
@@ -242,6 +245,14 @@ public class EmployeeMeritDetails implements Serializable {
 
 	public void setMeritSystem(String meritSystem) {
 		this.meritSystem = meritSystem;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
 	}
 
 	

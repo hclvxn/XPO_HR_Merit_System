@@ -100,6 +100,8 @@ font-weight:normal;
  
 </span> 
 
+           <c:set var="appraiserStage" value="${AppraiserStage}"/>
+           <c:set var="reviewerStage"  value="${ReviewerStage}"/>
            <c:set var="counter" value="0" />
             <c:forEach items="${empMeritDetailsListBean.empMeritDetail}" var="empMeritDetail">
                 <c:set var="counter" value="${counter+empMeritDetail.targetSalary}" /> 
@@ -148,6 +150,7 @@ font-weight:normal;
 <th rowspan="3" colspan="1">Last Salary Hike Date</th>
 <th rowspan="3" colspan="1">Merit Cycle</th>
 <th rowspan="3" colspan="1">Merit System</th>
+<th rowspan="3" colspan="1">Organization</th>
             </tr>
         </thead>
         <tbody>
@@ -215,6 +218,9 @@ font-weight:normal;
             </td>
             <td style="background-color:#E3EDF1" >
             <input name="empMeritDetail[${status.index}].meritSystem" value="${empMeritDetail.meritSystem}"/>
+            </td>
+            <td style="background-color:#E3EDF1" >
+            <input name="empMeritDetail[${status.index}].organization" value="${empMeritDetail.organization}"/>
             </td>
         </tr>
         
