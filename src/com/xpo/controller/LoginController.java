@@ -1,9 +1,12 @@
 package com.xpo.controller;
 
 import javax.validation.Valid;
+
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.util.MatcherAssertionErrors;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -17,6 +20,8 @@ import com.xpo.bean.UserBean;
 import com.xpo.model.User;
 import com.xpo.service.LoginService;
 
+import sun.security.krb5.internal.PAData.SaltAndParams;
+
 
 @Controller
 @SessionAttributes("userInfo")
@@ -24,6 +29,8 @@ public class LoginController {
 	
 	@Autowired
 	private LoginService loginService;
+	
+	
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -68,8 +75,7 @@ public class LoginController {
 		}*/
 		
 		User userModel = loginService.getEmployee(user.getUserName());
-		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		if (userModel.getPassword().equals(encodedPassword)) {
+		if(BCrypt.checkpw(user.getPassword(), userModel.getPassword())){
 			
 					
 			model1 = new ModelAndView("forward:/merit/getEmpMeritDetails.html");
