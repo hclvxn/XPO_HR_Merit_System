@@ -10,6 +10,8 @@ public class UserBean {
 	@NotNull
 	private String password;
 	
+	private String type;
+	
 
 	
 	public String getUserName() {
@@ -26,6 +28,14 @@ public class UserBean {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

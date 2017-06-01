@@ -46,6 +46,18 @@ public class EmpMeritDetailsBean {
 	private String l3Manager;
 	 
 	private String meritSystem;
+	
+	private String organization;
+	
+	private String directOrIndirect;
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
 
 	public String getEmpId() {
 		return empId;
@@ -205,6 +217,14 @@ public class EmpMeritDetailsBean {
 
 	public void setMeritSystem(String meritSystem) {
 		this.meritSystem = meritSystem;
+	}
+
+	public String getDirectOrIndirect() {
+		return directOrIndirect;
+	}
+
+	public void setDirectOrIndirect(String directOrIndirect) {
+		this.directOrIndirect = directOrIndirect;
 	}
 
 }

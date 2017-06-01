@@ -39,6 +39,7 @@ xmlns:context="http://www.springframework.org/schema/context"
   <list>
    <value>com.xpo.model.User</value>
    <value>com.xpo.model.EmployeeMeritDetails</value>
+   <value>com.xpo.model.StageWindow</value>
   </list>
  </property>
  <property name="hibernateProperties">

@@ -9,13 +9,14 @@ import javax.persistence.ParameterMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.procedure.ProcedureCall;
 import org.hibernate.procedure.ProcedureOutputs;
+import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.xpo.model.EmployeeMeritDetails;
+import com.xpo.model.StageWindow;
 
 @Repository("empMeritDetailsDao")
 public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
@@ -70,6 +71,80 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 		return reportees;
 		
 	}
+	
+    public List<String> getIndirectReportees(String empId) {
+		
+		ProcedureCall query = sessionFactory.getCurrentSession().createStoredProcedureCall("xpopoc.GetIndirectReportees");
+		query.registerParameter("empId", String.class, ParameterMode.IN).bindValue(empId);
+		query.registerParameter("reportees", String.class, ParameterMode.OUT);
+		ProcedureOutputs procedureResult=query.getOutputs();
+		String reportees= (String) procedureResult.getOutputParameterValue("reportees");
+		ArrayList<String> reporteesList = 
+				new  ArrayList<String>(Arrays.asList(reportees.split(",")));
+		
+		return reporteesList;
+		
+	}
+	
+    
+    public List<String> getDirectReportees(String empId) {
+    	
+    	Query query = sessionFactory.getCurrentSession().createSQLQuery("select u.EmployeeID from xpopoc.user_hierarchy u where u.DirectManagerId = :empId").
+    			setParameter("empId", empId);
+    	List<String> result = query.list();
+    	
+    	    	
+		return result;
+    	
+    	
+    }
+
+
+	@Override
+	public StageWindow getStageWindow(String stage) {
+		
+		StageWindow stageWindow = (StageWindow) sessionFactory.getCurrentSession().get(StageWindow.class, stage);
+			
+		return stageWindow;
+	}
+
+
+	@Override
+	public boolean checkJobStatus(String stage, String empId) {
+		
+		if(stage.equals("Reviewer")) {
+			
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where js.EmployeeId in (:empId) and "
+					+ "js.level = :stage and status = :status").addScalar("count", LongType.INSTANCE);
+			List<String> dirReportees = getDirectReportees(empId);
+			query.setParameter("empId", dirReportees);
+			query.setParameter("stage", stage);
+			query.setParameter("status", "Completed");
+			if((Long)query.uniqueResult() == dirReportees.size())
+				return true;
+			else
+				return false;
+
+					
+		}
+		else if(stage.equals("Appraiser")) {
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where js.EmployeeId  = :empId and "
+					+ "js.level = :stage and status = :status").addScalar("count", LongType.INSTANCE);
+			query.setParameter("empId", empId);
+			query.setParameter("stage", stage);
+			query.setParameter("status", "Completed");
+			
+			if((Long)query.uniqueResult() == 1)
+				return false;
+			else
+				return true;
+			
+		}
+		else
+			return false;
+		
+	}
+	
 
 
 	

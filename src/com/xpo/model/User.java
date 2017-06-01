@@ -34,6 +34,9 @@ public class User implements Serializable{
  
  @Column(name="Password")
  private String password;
+ 
+ @Column(name="Type")
+ private String type;
 
 public String getEmpId() {
 	return empId;
@@ -65,6 +68,14 @@ public String getPassword() {
 
 public void setPassword(String password) {
 	this.password = password;
+}
+
+public String getType() {
+	return type;
+}
+
+public void setType(String type) {
+	this.type = type;
 }
  
  
