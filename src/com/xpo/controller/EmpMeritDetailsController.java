@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.xpo.bean.EmpMeritDetailsBean;
@@ -92,8 +93,9 @@ public class EmpMeritDetailsController {
 		
 	}
 	
-	@RequestMapping(value="/saveEmpMeritDetails.html", method = RequestMethod.POST)
+	@RequestMapping(value="/saveEmpMeritDetails.html", method = RequestMethod.POST, params= {"save"})
 	public ModelAndView SaveEmpMeritDetails(@Valid @ModelAttribute("empMeritDetailsListBean") EmpMeritDetailsListBean list,
+			 @RequestParam(value = "save") String saveDirectOrIndirect,
 			BindingResult result, HttpServletRequest request) {
 		
 		
@@ -104,12 +106,32 @@ public class EmpMeritDetailsController {
 		
 		List<EmpMeritDetailsBean> empMeritDetails = list.getEmpMeritDetail();
 		
-		empService.saveEmpMeritDetails(prepareListOfModel(empMeritDetails));
+		empService.saveEmpMeritDetails(prepareListOfModel(empMeritDetails), (UserBean)request.getSession().getAttribute("userInfo"), saveDirectOrIndirect);
 		ModelAndView model1 = new ModelAndView("redirect:/merit/getEmpMeritDetails.html");
 		model1.addObject("user", request.getSession().getAttribute("userInfo"));
 		
 		return model1;	
 	}	
+	
+	
+	@RequestMapping(value="/saveEmpMeritDetails.html", method = RequestMethod.POST, params= {"submit"})
+	public ModelAndView SubmitEmpMeritDetails(@Valid @ModelAttribute("empMeritDetailsListBean") EmpMeritDetailsListBean list,
+			@RequestParam(value = "submit") String submitDirectOrIndirect, BindingResult result, HttpServletRequest request) {
+		
+		
+		/*if(result.hasErrors()){
+			model1 = new ModelAndView("LoginForm");
+			
+		}*/
+		
+		List<EmpMeritDetailsBean> empMeritDetails = list.getEmpMeritDetail();
+		
+		empService.submitEmpMeritDetails(prepareListOfModel(empMeritDetails), (UserBean) request.getSession().getAttribute("userInfo"), submitDirectOrIndirect);
+		ModelAndView model1 = new ModelAndView("redirect:/merit/getEmpMeritDetails.html");
+		model1.addObject("user", request.getSession().getAttribute("userInfo"));
+		
+		return model1;	
+	}
 	
 	private List<EmployeeMeritDetails> prepareListOfModel(List<EmpMeritDetailsBean> empMeritDetailsList) {
 		List<EmployeeMeritDetails> modelList = null;

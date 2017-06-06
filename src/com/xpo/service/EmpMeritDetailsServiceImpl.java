@@ -1,7 +1,6 @@
 package com.xpo.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.xpo.bean.UserBean;
 import com.xpo.dao.EmpMeritDetailsDao;
 import com.xpo.model.EmployeeMeritDetails;
 import com.xpo.model.StageWindow;
@@ -28,9 +28,16 @@ public class EmpMeritDetailsServiceImpl implements EmpMeritDetailsService {
 	}
 
 	@Override
-	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {
+	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list, UserBean user, String saveInd) {
 		
-		empDao.saveEmpMeritDetails(list);
+		empDao.saveEmpMeritDetails(list, user, saveInd);
+		
+	}
+	
+	@Override
+	public void submitEmpMeritDetails(List<EmployeeMeritDetails> list, UserBean user, String submitInd) {
+		
+		empDao.submitEmpMeritDetails(list, user, submitInd);
 		
 	}
 

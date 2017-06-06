@@ -15,7 +15,10 @@ import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.xpo.bean.UserBean;
 import com.xpo.model.EmployeeMeritDetails;
+import com.xpo.model.JobStatus;
+import com.xpo.model.JobStatusPK;
 import com.xpo.model.StageWindow;
 
 @Repository("empMeritDetailsDao")
@@ -46,19 +49,219 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 	
 	
 	@Override
-	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {
+	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list, UserBean user, String saveInd) {
 		
+		Session session = null;
+		
+		Long cntOfStatus = 0L;
+		Long cntOfIndirectRep = 0L;
+		
+		session = sessionFactory.openSession();
+		session.beginTransaction();
 		for(EmployeeMeritDetails empMeritDetails: list) {
-			Session session = sessionFactory.openSession();
-			session.beginTransaction();
+			
 			session.saveOrUpdate(empMeritDetails);
-			session.getTransaction().commit();
-			session.close();
+			
 			
 			
 		}	
 		
+		if(saveInd.equals("saveDirect")) {
+			
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where js.EmployeeId = :empId and "
+					+ "js.Level = :level")
+					.addScalar("count", LongType.INSTANCE);
+			query.setParameter("empId", user.getUserName());
+			query.setParameter("level", "Appraiser");
+			cntOfStatus = (Long)query.uniqueResult();
+			
+			query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.user_hierarchy uh where uh.DirectManagerId in (:directReportees)")
+					.addScalar("count", LongType.INSTANCE);
+			List<String> dirReportees = getDirectReportees(user.getUserName());
+			query.setParameterList("directReportees", dirReportees);
+			cntOfIndirectRep = (Long)query.uniqueResult();
+			
+			if(cntOfStatus < 1) {
+				
+				
+				
+				
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Appraiser");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Pending");
+				session.save(jobStatus);
+				
+				if(cntOfIndirectRep < 1) {
+					
+					jobStatus = new JobStatus();
+					jobStatusPK = new JobStatusPK();
+					jobStatusPK.setEmployeeId(user.getUserName());
+					jobStatusPK.setLevel("Reviewer");
+					jobStatus.setJobStatusPK(jobStatusPK);
+					jobStatus.setStatus("Pending");
+					session.save(jobStatus);
+					
+				}
+			}
+			
+		}
+		
+		else if(saveInd.equals("saveIndirect")) {
+			
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where "
+					+ "js.EmployeeId = :empId and js.Level = :level")
+					.addScalar("count", LongType.INSTANCE);
+			query.setParameter("empId", user.getUserName());
+			query.setParameter("level", "Reviewer");
+			cntOfStatus = (Long)query.uniqueResult();
+			
+			if(cntOfStatus < 1) {
+				
+					
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Reviewer");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Pending");
+				session.save(jobStatus);
+				
+			}
+			
+			
+		}
+		
+		session.getTransaction().commit();
+		session.close();
+		
 	}
+	
+	@Override
+	public void submitEmpMeritDetails(List<EmployeeMeritDetails> list, UserBean user, String submitInd) {
+		
+		Session session = null;
+		String updateQuery;
+		
+		Long cntOfStatus = 0L;
+		Long cntOfIndirectRep = 0L;
+		
+		session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		
+		for(EmployeeMeritDetails empMeritDetails: list) {
+			session.saveOrUpdate(empMeritDetails);
+			
+			
+		}
+		
+		if(submitInd.equals("submitDirect")) {
+			
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where js.EmployeeId = :empId and js.Level = :level")
+					.addScalar("count", LongType.INSTANCE);
+			query.setParameter("empId", user.getUserName());
+			query.setParameter("level", "Appraiser");
+			cntOfStatus = (Long)query.uniqueResult();
+			
+			query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.user_hierarchy uh where uh.DirectManagerId in (:directReportees)")
+					.addScalar("count", LongType.INSTANCE);
+			List<String> dirReportees = getDirectReportees(user.getUserName());
+			query.setParameterList("directReportees", dirReportees);
+			cntOfIndirectRep = (Long)query.uniqueResult();
+			
+			if(cntOfStatus > 0) {
+				
+				
+				
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Appraiser");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Completed");
+				session.update(jobStatus);
+				
+				if(cntOfIndirectRep < 1) {
+					
+					jobStatus = new JobStatus();
+					jobStatusPK = new JobStatusPK();
+					jobStatusPK.setEmployeeId(user.getUserName());
+					jobStatusPK.setLevel("Reviewer");
+					jobStatus.setJobStatusPK(jobStatusPK);
+					jobStatus.setStatus("Completed");
+					session.update(jobStatus);
+					
+				}
+					
+					
+					
+				
+			}
+			else {
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Appraiser");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Completed");
+				session.save(jobStatus);
+				
+				if(cntOfIndirectRep < 1) {
+					
+					jobStatus = new JobStatus();
+					jobStatusPK = new JobStatusPK();
+					jobStatusPK.setEmployeeId(user.getUserName());
+					jobStatusPK.setLevel("Reviewer");
+					jobStatus.setJobStatusPK(jobStatusPK);
+					jobStatus.setStatus("Completed");
+					session.save(jobStatus);
+					
+				}
+			}
+			
+		}
+		
+		else if(submitInd.equals("submitIndirect")) {
+			
+			Query query = sessionFactory.getCurrentSession().createSQLQuery("select count(*) as count from xpopoc.job_status js where js.EmployeeId = :empId "
+					+ "and js.Level = :level")
+					.addScalar("count", LongType.INSTANCE);
+			query.setParameter("empId", user.getUserName());
+			query.setParameter("level", "Reviewer");
+			cntOfStatus = (Long)query.uniqueResult();
+			
+			if(cntOfStatus > 0) {
+				
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Reviewer");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Completed");
+				session.update(jobStatus);
+			}
+			else {
+				
+				JobStatus jobStatus = new JobStatus();
+				JobStatusPK jobStatusPK = new JobStatusPK();
+				jobStatusPK.setEmployeeId(user.getUserName());
+				jobStatusPK.setLevel("Reviewer");
+				jobStatus.setJobStatusPK(jobStatusPK);
+				jobStatus.setStatus("Completed");
+				session.save(jobStatus);
+				
+			}
+			
+			
+		}
+		
+		session.getTransaction().commit();
+		session.close();
+	}
+			
 	
 	
 	private String getReportees(String empId) {
@@ -72,7 +275,7 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 		
 	}
 	
-    public List<String> getIndirectReportees(String empId) {
+    public List<String> getIndirectReporteesCount(String empId) {
 		
 		ProcedureCall query = sessionFactory.getCurrentSession().createStoredProcedureCall("xpopoc.GetIndirectReportees");
 		query.registerParameter("empId", String.class, ParameterMode.IN).bindValue(empId);

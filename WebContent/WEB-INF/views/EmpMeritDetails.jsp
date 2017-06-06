@@ -134,6 +134,7 @@ font-weight:normal;
 <th rowspan="3" colspan="1">Employee ID</th>
 <th rowspan="3" colspan="1">First Name</th>
 <th rowspan="3" colspan="1">Last Name</th>
+<th rowspan="3" colspan="1">Direct/Indirect</th>
 <th rowspan="3" colspan="1">Direct Manager</th>
 <th rowspan="3" colspan="1">1st Level</th>
 <th rowspan="3" colspan="1">2nd Level</th>
@@ -160,44 +161,59 @@ font-weight:normal;
         <tr class="textbox">
             <td align="center">${status.count}</td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].empId" value="${empMeritDetail.empId}"/>
+            <input name="empMeritDetail[${status.index}].empId" value="${empMeritDetail.empId}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].firstName" value="${empMeritDetail.firstName}"/>
+            <input name="empMeritDetail[${status.index}].firstName" value="${empMeritDetail.firstName}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1"  >
-            <input name="empMeritDetail[${status.index}].lastName" value="${empMeritDetail.lastName}"/>
+            <input name="empMeritDetail[${status.index}].lastName" value="${empMeritDetail.lastName}" readonly="true"/>
+            </td>
+            <td style="background-color:#E3EDF1"  >
+            <input name="empMeritDetail[${status.index}].directOrIndirect" value="${empMeritDetail.directOrIndirect}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].directManager" value="${empMeritDetail.directManager}"/>
+            <input name="empMeritDetail[${status.index}].directManager" value="${empMeritDetail.directManager}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].l1Manager" value="${empMeritDetail.l1Manager}"/>
+            <input name="empMeritDetail[${status.index}].l1Manager" value="${empMeritDetail.l1Manager}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].l2Manager" value="${empMeritDetail.l2Manager}"/>
+            <input name="empMeritDetail[${status.index}].l2Manager" value="${empMeritDetail.l2Manager}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].l3Manager" value="${empMeritDetail.l3Manager}"/>
+            <input name="empMeritDetail[${status.index}].l3Manager" value="${empMeritDetail.l3Manager}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" > 
-            <input name="empMeritDetail[${status.index}].jobTitle" value="${empMeritDetail.jobTitle}"/>
+            <input name="empMeritDetail[${status.index}].jobTitle" value="${empMeritDetail.jobTitle}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].hireDate" value="${empMeritDetail.hireDate}"/>
+            <input name="empMeritDetail[${status.index}].hireDate" value="${empMeritDetail.hireDate}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].performanceSurvey" value="${empMeritDetail.performanceSurvey}"/>
+            <input name="empMeritDetail[${status.index}].performanceSurvey" value="${empMeritDetail.performanceSurvey}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].currentSalary" value="${empMeritDetail.currentSalary}"/>
+            <input name="empMeritDetail[${status.index}].currentSalary" value="${empMeritDetail.currentSalary}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].targetSalary" value="${empMeritDetail.targetSalary}"/>
+            <input name="empMeritDetail[${status.index}].targetSalary" value="${empMeritDetail.targetSalary}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].targetPercentage" value="${empMeritDetail.targetPercentage}"/>
+            <input name="empMeritDetail[${status.index}].targetPercentage" value="${empMeritDetail.targetPercentage}" readonly="true"/>
             </td>
+            <c:if test="${empMeritDetail.directOrIndirect eq 'Direct'}">
+            <c:if test="${AppraiserStage ne true}">
+            <td style="background-color:#E3EDF1" >
+            <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].recommendedSalPerc"
+                               value="<c:out value="${empMeritDetail.recommendedSalPerc}" />" readonly="true"/>
+            </td>                               
+            <td style="background-color:#FFFFFF" >
+            <input type="text" class="textbox"  name="empMeritDetail[${status.index}].recommendedSalAmt"
+                               value="<c:out value="${empMeritDetail.recommendedSalAmt}" />" readonly = "true" onchange="update(${cnt})"/>
+             </td>
+            </c:if>
+            <c:if test="${AppraiserStage ne false}">
             <td style="background-color:#E3EDF1" >
             <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].recommendedSalPerc"
                                value="<c:out value="${empMeritDetail.recommendedSalPerc}" />" />
@@ -206,30 +222,100 @@ font-weight:normal;
             <input type="text" class="textbox"  name="empMeritDetail[${status.index}].recommendedSalAmt"
                                value="<c:out value="${empMeritDetail.recommendedSalAmt}" />" onchange="update(${cnt})"/>
              </td>
+             </c:if>
+            </c:if>
+            
+             
+            <c:if test="${empMeritDetail.directOrIndirect eq 'Indirect'}">
+            <c:if test="${ReviewerStage ne true}">
+            <td style="background-color:#E3EDF1" >
+            <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].recommendedSalPerc"
+                               value="<c:out value="${empMeritDetail.recommendedSalPerc}" />" readonly="true"/>
+            </td>                               
+            <td style="background-color:#FFFFFF" >
+            <input type="text" class="textbox"  name="empMeritDetail[${status.index}].recommendedSalAmt"
+                               value="<c:out value="${empMeritDetail.recommendedSalAmt}" />" readonly = "true" onchange="update(${cnt})"/>
+             </td>
+            </c:if>
+            <c:if test="${ReviewerStage ne false}">
+            <td style="background-color:#E3EDF1" >
+            <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].recommendedSalPerc"
+                               value="<c:out value="${empMeritDetail.recommendedSalPerc}" />"/>
+            </td>                               
+            <td style="background-color:#FFFFFF" >
+            <input type="text" class="textbox"  name="empMeritDetail[${status.index}].recommendedSalAmt"
+                               value="<c:out value="${empMeritDetail.recommendedSalAmt}" />" onchange="update(${cnt})"/>
+             </td>
+             </c:if>
+             </c:if>
             <td style="background-color:#E3EDF1" >
             <input type="text" class="textbox"  name ="empMeritDetail[${status.index}].salAfterMerit"
-                               value="<c:out value="${empMeritDetail.salAfterMerit}" />" />
+                               value="<c:out value="${empMeritDetail.salAfterMerit}"/>" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].lastSalaryHikeDate" value="${empMeritDetail.lastSalaryHikeDate}"/>
+            <input name="empMeritDetail[${status.index}].lastSalaryHikeDate" value="${empMeritDetail.lastSalaryHikeDate}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].meritCycle" value="${empMeritDetail.meritCycle}"/>
+            <input name="empMeritDetail[${status.index}].meritCycle" value="${empMeritDetail.meritCycle}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].meritSystem" value="${empMeritDetail.meritSystem}"/>
+            <input name="empMeritDetail[${status.index}].meritSystem" value="${empMeritDetail.meritSystem}" readonly="true"/>
             </td>
             <td style="background-color:#E3EDF1" >
-            <input name="empMeritDetail[${status.index}].organization" value="${empMeritDetail.organization}"/>
+            <input name="empMeritDetail[${status.index}].organization" value="${empMeritDetail.organization}" readonly="true"/>
             </td>
         </tr>
         
+       
+        
 		
     </c:forEach>
+    
+    <tr>
+    <td colspan="22"></td>
+    </tr>
+    <tr>
+    <c:if test="${AppraiserStage ne false}">
+    
+    <td>
+    <input type="submit" name="save" class="button" value="saveDirect">
+    </td>
+    <td>
+    <input type="submit" name="submit" class="button" value="submitDirect">
+    </td>
+    
+    </c:if>
+    <c:if test="${AppraiserStage ne true}">
+    <tr>
+    <td>
+    <input type="submit" name="save" class="button" value="saveDirect" disabled>
+    </td>
+    <td>
+    <input type="submit" name="submit" class="button" value="submitDirect" disabled>
+    </td>
+    
+    </c:if>
+    <c:if test="${ReviewerStage ne false}">
+    <td>
+    <input type="submit" name="save" class="button" value="saveIndirect">
+    </td>
+    <td>
+    <input type="submit" name="submit" class="button" value="submitIndirect">
+    </td>
+    </c:if>
+    <c:if test="${ReviewerStage ne true}">
+    <td>
+    <input type="submit" name="save" class="button" value="saveIndirect" disabled>
+    </td>
+    <td>
+    <input type="submit" name="submit" class="button" value="submitIndirect" disabled>
+    </td>
+    </c:if>
+    </tr>
 	  
         </tbody>
         </table>
 	</div>
-	                    <input type="submit" name="Submit" id="Submit" class="button" value="Submit" onclick="validate()">
+	                    
         </form>
 </html>
