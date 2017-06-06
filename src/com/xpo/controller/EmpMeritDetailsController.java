@@ -111,6 +111,23 @@ public class EmpMeritDetailsController {
 		return model1;	
 	}	
 	
+	@RequestMapping(value = "/export", method = RequestMethod.GET)
+	public ModelAndView export(@Valid @ModelAttribute("user") UserBean user, 
+			BindingResult result) {
+		
+		ModelAndView model1;
+		EmpMeritDetailsListBean empMeritDetailsListBean;
+		
+		
+		/*if(result.hasErrors()){
+			model1 = new ModelAndView("LoginForm");
+			
+		}*/
+		
+		List<EmployeeMeritDetails> empMeritDetails1 = empService.getEmpMeritDetails(user.getUserName());
+		return new ModelAndView("excelView", "empMeritDetails1", empMeritDetails1);
+		
+	}
 	private List<EmployeeMeritDetails> prepareListOfModel(List<EmpMeritDetailsBean> empMeritDetailsList) {
 		List<EmployeeMeritDetails> modelList = null;
 		if(empMeritDetailsList != null && !empMeritDetailsList.isEmpty()){

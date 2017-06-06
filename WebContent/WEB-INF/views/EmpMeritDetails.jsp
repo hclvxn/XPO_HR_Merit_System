@@ -125,7 +125,9 @@ font-weight:normal;
                 <td>BUDGET OVER (+) OR UNDER (-)</td>
             </tr>
         </table>
-        <br><br><br><br><br><br>
+        <br><br><br><br>
+        <div align="center"><a href="/XPO_HR_Merit_System/merit/export">Export</a></div>
+        <br><br>
         <div style="overflow:scroll">
 		<table border="0" align="" id="Line_values" class="class1 tablevalue">
                     <thead>

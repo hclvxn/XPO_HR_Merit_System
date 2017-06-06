@@ -71,8 +71,14 @@ xmlns:context="http://www.springframework.org/schema/context"
        <property name="suffix">
          <value>.jsp</value>
        </property>
+         <property name="order" value="1" />
  </bean>
- 
+    <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+	   <property name="location">
+	       <value>/WEB-INF/views.xml</value>
+	   </property>
+	   <property name="order" value="0" />
+	</bean>
  <bean id="messageSource"
        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
        
@@ -80,5 +86,5 @@ xmlns:context="http://www.springframework.org/schema/context"
        
  </bean>
  
-    
+
  </beans>
