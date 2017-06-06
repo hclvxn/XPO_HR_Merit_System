@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.crypto.bcrypt.*;
 
 import com.xpo.bean.UserBean;
 import com.xpo.model.User;
@@ -68,7 +69,7 @@ public class LoginController {
 		}*/
 		
 		User userModel = loginService.getEmployee(user.getUserName());
-		if (userModel.getPassword().equals(user.getPassword())) {
+		if(BCrypt.checkpw(user.getPassword(), userModel.getPassword())) {
 			
 					
 			model1 = new ModelAndView("redirect:/merit/getEmpMeritDetails.html");
