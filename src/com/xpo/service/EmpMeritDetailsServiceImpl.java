@@ -26,6 +26,12 @@ public class EmpMeritDetailsServiceImpl implements EmpMeritDetailsService {
 		// TODO Auto-generated method stub
 		return empDao.getEmpMeritDetails(empId);
 	}
+	
+	@Override
+	public List<String> getDirectManagers(String empId) {
+		// TODO Auto-generated method stub
+		return empDao.getDirectManagers(empId);
+	}
 
 	@Override
 	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {

@@ -13,6 +13,8 @@ public interface EmpMeritDetailsDao {
 	
 	public List<String> getDirectReportees(String empId);
 	
+	public List<String> getDirectManagers(String empId);
+	
 	public StageWindow getStageWindow(String stage);
 	
 	public boolean checkJobStatus(String stage, String empId);

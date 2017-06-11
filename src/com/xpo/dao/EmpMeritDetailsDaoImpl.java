@@ -44,6 +44,21 @@ public class EmpMeritDetailsDaoImpl implements EmpMeritDetailsDao {
 		
 	}
 	
+	@Override
+	public List<String> getDirectManagers(String empId) {
+		
+		
+		
+		ArrayList<String> reportees = 
+				new  ArrayList<String>(Arrays.asList(getReportees(empId).split(",")));
+		
+		Query query = sessionFactory.getCurrentSession().createQuery("Select empMeritDetails.directManager FROM EmployeeMeritDetails empMeritDetails WHERE empMeritDetails.empId IN (:ids)"+" group by empMeritDetails.directManager");
+		query.setParameterList("ids", reportees);
+		List<String> directManagers = query.list();
+		
+		return directManagers;
+	}
+	
 	
 	@Override
 	public void saveEmpMeritDetails(List<EmployeeMeritDetails> list) {

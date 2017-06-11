@@ -85,6 +85,16 @@ font-weight:normal;
 	} */
 	
 	</script>
+	
+	<form method="post" action="/XPO_HR_Merit_System/merit/saveEmpMeritDetails.html" modelAttribute="empMeritDetailsListBean">
+	
+	<form:select path="directManagersName">
+                      <form:option value="" label="...." />
+                      <form:options items="${directManagers}" />
+</form:select>
+	
+	
+	</form>
 	<form method="post" action="/XPO_HR_Merit_System/merit/saveEmpMeritDetails.html" modelAttribute="empMeritDetailsListBean">
 	<span style="background-color:#CC0000;float:right;padding-left:68%" >
     

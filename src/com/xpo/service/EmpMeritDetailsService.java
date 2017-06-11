@@ -14,4 +14,6 @@ public interface EmpMeritDetailsService {
 	
 	public boolean isStageCompleted(String stage, String empId);
 
+	public List<String> getDirectManagers(String userName);
+
 }

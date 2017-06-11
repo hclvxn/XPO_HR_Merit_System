@@ -74,6 +74,7 @@ public class EmpMeritDetailsController {
 		if(empMeritDetails != null) {
 			
 			List<String> directReportees = empService.getDirectReportees(user.getUserName());
+			List<String> directManagers = empService.getDirectManagers(user.getUserName());
 			
 			model1 = new ModelAndView("EmpMeritDetails");
 			empMeritDetailsListBean = new EmpMeritDetailsListBean();
@@ -81,6 +82,7 @@ public class EmpMeritDetailsController {
 			model1.addObject("empMeritDetailsListBean", empMeritDetailsListBean);
 			model1.addObject("ReviewerStage", checkStageStatus(user.getUserName(), "Reviewer"));
 			model1.addObject("AppraiserStage", checkStageStatus(user.getUserName(), "Appraiser"));
+			model1.addObject("directManagers",directManagers);
 			return model1;
 		}
 		else {
